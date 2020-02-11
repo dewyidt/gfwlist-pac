@@ -1,12 +1,11 @@
 const rules = {
     PREFIX: [],
+    SUFFIX: [],
     INCLUDE: [],
     REGEXP: [],
 };
 
-const resolve_line = line => {
-    let text = line.trim();
-
+const resolve_unused_line = text => {
     if (
         text === ''
         || text.startsWith('!')
@@ -14,53 +13,95 @@ const resolve_line = line => {
         // I think hostname in exception rules can be accessed
         || text.startsWith('@')
     ) {
-        return '';
+        return true;
     }
 
-    // exact prefix without protocol
-    if (text.startsWith('||')) {
-        // 1. ||*.a.b
-        if (text.startsWith('||*')) {
-            const rule = text.match(/^\|\|\*([^/*|:]+)/)[1];
-            rules.INCLUDE.push(rule);
-            return;
-        }
+    return false;
+};
 
-        // 1. ||a.b.com
-        // 2. ||a.b.com/123
-        // 3. ||a.b.*
-        // 4. ||a.b.com|
-        // 5. ||a.b.com:8000 => trim port now
-        const rule = text.match(/^\|\|([^/*|:]+)/)[1];
-        rules.PREFIX.push(rule);
+const resolve_anchor_line = text => {
+    if (!text.startsWith('||')) {
+        return false;
+    }
+
+    text = text.match(/^\|\|([^/|:]+)/)[1];
+    const last_star_index = text.lastIndexOf('*');
+    // 1. ||*.a.com
+    // 2. ||a.*.b.com
+    if (last_star_index !== -1) {
+        text = text.slice(last_star_index + 1);
+    }
+
+    // text may be empty for `||a.b.*`, ignore it
+    if (text) {
+        rules.SUFFIX.push(text);
+    }
+
+    return true;
+};
+
+const resolve_prefix_line = text => {
+    if (!text.startsWith('|')) {
+        return false;
+    }
+
+    text = text.match(/\|https?:\/\/([^/|:]+)/)[1];
+    const last_star_index = text.lastIndexOf('*');
+    if (last_star_index !== -1) {
+        // startsWith `*`
+        // 1. |*.a.b.com
+        // 2. |a.*.b.com => use .b.com
+        const rule = text.slice(last_star_index + 1);
+        rule && rules.INCLUDE.push(rule);
+        return true;
+    }
+
+    if (text) {
+        rules.PREFIX.push(text);
+    }
+
+    return true;
+};
+
+const resolve_regexp_line = text => {
+    if (!text.startsWith('/')) {
+        return false;
+    }
+
+    // may be not regexp, but i cant resolve it
+    if (!text.endsWith('/')) {
+        return true;
+    }
+
+    rules.REGEXP.push(text.slice(1, -1));
+    return true;
+};
+
+const resolve_line = line => {
+    let text = line.trim();
+
+    if (resolve_unused_line(text)) {
         return;
     }
 
-    // exact prefix
-    if (text.startsWith('|')) {
-        // 1. |https://*.a.b.com
-        if (text.match(/^\|https?:\/\/\*/)) {
-            const rule = text.match(/^\|https?:\/\/\*([^/*|:]+)/)[1];
-            rules.INCLUDE.push(rule);
-            return;
-        }
-
-        const rule = text.match(/^\|https?:\/\/([^/*|:]+)/)[1];
-        rules.PREFIX.push(rule);
+    // startsWith ||
+    if (resolve_anchor_line(text)) {
         return;
     }
 
-    // regexp
-    if (text.startsWith('/') && text.endsWith('/')) {
-        const rule = text.slice(1, -1);
-        rules.REGEXP.push(rule);
+    // startsWith |
+    if (resolve_prefix_line(text)) {
         return;
     }
 
-    /* other rule will be INCLUDE */
+    if (resolve_regexp_line(text)) {
+        return;
+    }
+
+    /* other rules will be INCLUDE */
 
     // remove leading `protocol`
-    text = text.replace(/[a-zA-Z0-9]+:\/\//, '');
+    text = text.replace(/^[a-zA-Z0-9]+:\/\//, '');
 
     // remove leading `*`
     if (text.startsWith('*')) {

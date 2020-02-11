@@ -1,7 +1,7 @@
 module.exports = {
     PREFIX: [
     ],
-    INCLUDE: [
+    SUFFIX: [
         'ant.design',
         '.live.com',
         'xda-developers.com',
@@ -40,7 +40,9 @@ module.exports = {
         'freecodecamp.org',
         'godaddy.com',
         'azure.com',
-        'unpkg.com'
+        'unpkg.com',
+    ],
+    INCLUDE: [
     ],
     REGEXP: [
     ],
