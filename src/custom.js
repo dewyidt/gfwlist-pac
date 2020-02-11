@@ -41,6 +41,9 @@ module.exports = {
         'godaddy.com',
         'azure.com',
         'unpkg.com',
+        'githubusercontent.com',
+        'githubassets.com',
+        'githubapp.com',
     ],
     INCLUDE: [
     ],
