@@ -1,4 +1,5 @@
 // https://github.com/conwnet/gfwlist-pac
+// update on {%TIMESTAMP%}
 
 var proxy = '{%PROXY%}';
 

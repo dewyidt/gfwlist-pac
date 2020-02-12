@@ -36,10 +36,12 @@ const main = async () => {
     }, {});
 
     const template_pac = (await promisify(fs.readFile)(TEMPLATE_PAC_PATH)).toString();
+    const timestamp = (new Date()).toISOString();
 
     await promisify(fs.writeFile)(
         GFWLIST_PAC_PATH,
         template_pac
+            .replace('{%TIMESTAMP%}', timestamp)
             .replace('{%PROXY%}', DEFAULT_PROXY)
             .replace('{%RULES%}', JSON.stringify(gfw_rules, null, 4))
     );
@@ -47,6 +49,7 @@ const main = async () => {
     await promisify(fs.writeFile)(
         CUSTOM_PAC_PATH,
         template_pac
+            .replace('{%TIMESTAMP%}', timestamp)
             .replace('{%PROXY%}', DEFAULT_PROXY)
             .replace('{%RULES%}', JSON.stringify(my_rules, null, 4))
     );

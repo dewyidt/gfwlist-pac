@@ -44,6 +44,9 @@ module.exports = {
         'githubusercontent.com',
         'githubassets.com',
         'githubapp.com',
+        'office365.com',
+        'optimizely.com',
+        'msauth.net',
     ],
     INCLUDE: [
     ],

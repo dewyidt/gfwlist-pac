@@ -1,4 +1,5 @@
 // https://github.com/conwnet/gfwlist-pac
+// update on 2020-02-12T06:55:33.655Z
 
 var proxy = 'SOCKS5 127.0.0.1:1080';
 
@@ -521,6 +522,9 @@ var rules = {
         "githubusercontent.com",
         "githubassets.com",
         "githubapp.com",
+        "office365.com",
+        "optimizely.com",
+        "msauth.net",
         "agnesb.fr",
         "akiba-web.com",
         "altrec.com",
