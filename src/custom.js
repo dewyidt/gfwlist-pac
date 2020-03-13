@@ -47,6 +47,10 @@ module.exports = {
         'office365.com',
         'optimizely.com',
         'msauth.net',
+        'acexedge.com',
+        'microsoft.com',
+        'skype.com',
+        'cdn.office.net',
     ],
     INCLUDE: [
     ],
