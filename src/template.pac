@@ -25,10 +25,20 @@ function endsWith(source, suffix) {
     return true;
 }
 
+function anchorWith(source, anchor) {
+    var isMatch = endsWith(source, anchor);
+    if (!isMatch) {
+        return false;
+    }
+    return source.length === anchor.length
+        || source[source.length - anchor.length - 1] === '.';
+}
+
 function FindProxyForURL(url, hostname) {
     var i, l;
     var PREFIX = rules.PREFIX;
     var SUFFIX = rules.SUFFIX;
+    var ANCHOR = rules.ANCHOR;
     var INCLUDE = rules.INCLUDE;
     var REGEXP = rules.REGEXP;
 
@@ -40,6 +50,12 @@ function FindProxyForURL(url, hostname) {
 
     for (i = 0, l = SUFFIX.length; i < l; i++) {
         if (endsWith(hostname, SUFFIX[i])) {
+            return proxy;
+        }
+    }
+
+    for (i = 0, l = ANCHOR.length; i < l; i++) {
+        if (anchorWith(hostname, ANCHOR[i])) {
             return proxy;
         }
     }

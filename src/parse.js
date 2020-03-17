@@ -1,6 +1,7 @@
 const rules = {
     PREFIX: [],
     SUFFIX: [],
+    ANCHOR: [],
     INCLUDE: [],
     REGEXP: [],
 };
@@ -20,6 +21,23 @@ const resolve_unused_line = text => {
 };
 
 const resolve_anchor_line = text => {
+    const matches = text.match(/^\|\|([.\w\-]+)/);
+
+    if (!matches) {
+        return false;
+    }
+
+    text = matches[1];
+    // for `||.a.com` invalid rule but special handle it
+    if (text[0] === '.') {
+        text = text.slice(1);
+    }
+
+    rules.ANCHOR.push(text);
+    return true;
+};
+
+const resolve_suffix_line = text => {
     if (!text.startsWith('||')) {
         return false;
     }
@@ -84,8 +102,13 @@ const resolve_line = line => {
         return;
     }
 
-    // startsWith ||
+    // anchorWith ||
     if (resolve_anchor_line(text)) {
+        return;
+    }
+
+    // endsWith ||
+    if (resolve_suffix_line(text)) {
         return;
     }
 

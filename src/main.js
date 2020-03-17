@@ -6,6 +6,7 @@ const parse = require('./parse');
 const DEFAULT_PROXY = 'SOCKS5 127.0.0.1:1080';
 const TEMPLATE_PAC_PATH = path.join(__dirname, './template.pac');
 const GFWLIST_PATH = path.join(__dirname, '../gfwlist.txt');
+const GFWLIST_RAW_PATH = path.join(__dirname, '../gfwlist.raw');
 const GFWLIST_PAC_PATH = path.join(__dirname, '../gfwlist.pac');
 const CUSTOM_PAC_PATH = path.join(__dirname, '../my.pac');
 
@@ -13,6 +14,7 @@ const get_gfw_rules = async gfwlist_path => {
     const gfw_raw = (await promisify(fs.readFile)(gfwlist_path)).toString();
     const gfw_data = Buffer.from(gfw_raw, 'base64').toString();
 
+    fs.writeFile(GFWLIST_RAW_PATH, gfw_data, () => {});
     return parse(gfw_data);
 };
 

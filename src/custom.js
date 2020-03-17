@@ -2,8 +2,10 @@ module.exports = {
     PREFIX: [
     ],
     SUFFIX: [
+    ],
+    ANCHOR: [
         'ant.design',
-        '.live.com',
+        'live.com',
         'xda-developers.com',
         'xda-cdn.com',
         'mozilla.net',
@@ -33,7 +35,7 @@ module.exports = {
         'babeljs.io',
         '64clouds.com',
         'docker.com',
-        '.js.org',
+        'js.org',
         'perimeterx.net',
         'webassembly.org',
         'npmjs.com',
@@ -51,6 +53,8 @@ module.exports = {
         'microsoft.com',
         'skype.com',
         'cdn.office.net',
+        'adnxs.com',
+        'poj.org',
     ],
     INCLUDE: [
     ],

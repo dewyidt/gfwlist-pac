@@ -1,5 +1,5 @@
 // https://github.com/conwnet/gfwlist-pac
-// update on 2020-03-13T04:04:43.328Z
+// update on 2020-03-17T10:25:15.016Z
 
 var proxy = 'SOCKS5 127.0.0.1:1080';
 
@@ -479,9 +479,10 @@ var rules = {
         "zhongguorenquan.org",
         "book.zi5.me"
     ],
-    "SUFFIX": [
+    "SUFFIX": [],
+    "ANCHOR": [
         "ant.design",
-        ".live.com",
+        "live.com",
         "xda-developers.com",
         "xda-cdn.com",
         "mozilla.net",
@@ -511,7 +512,7 @@ var rules = {
         "babeljs.io",
         "64clouds.com",
         "docker.com",
-        ".js.org",
+        "js.org",
         "perimeterx.net",
         "webassembly.org",
         "npmjs.com",
@@ -529,6 +530,8 @@ var rules = {
         "microsoft.com",
         "skype.com",
         "cdn.office.net",
+        "adnxs.com",
+        "poj.org",
         "agnesb.fr",
         "akiba-web.com",
         "altrec.com",
@@ -607,7 +610,7 @@ var rules = {
         "hulu.com",
         "huluim.com",
         "hybrid-analysis.com",
-        ".i-scmp.com",
+        "cdn",
         "ilovelongtoes.com",
         "imlive.com",
         "tw.iqiyi.com",
@@ -1331,7 +1334,7 @@ var rules = {
         "avidemux.org",
         "avoision.com",
         "axureformac.com",
-        ".azurewebsites.net",
+        "boxun",
         "backchina.com",
         "badiucao.com",
         "baidu.jp",
@@ -2361,7 +2364,7 @@ var rules = {
         "photofocus.com",
         "phuquocservices.com",
         "picacomiccn.com",
-        ".picturedip.com",
+        "img",
         "pin-cong.com",
         "pin6.com",
         "ping.fm",
@@ -6772,10 +6775,20 @@ function endsWith(source, suffix) {
     return true;
 }
 
+function anchorWith(source, anchor) {
+    var isMatch = endsWith(source, anchor);
+    if (!isMatch) {
+        return false;
+    }
+    return source.length === anchor.length
+        || source[source.length - anchor.length - 1] === '.';
+}
+
 function FindProxyForURL(url, hostname) {
     var i, l;
     var PREFIX = rules.PREFIX;
     var SUFFIX = rules.SUFFIX;
+    var ANCHOR = rules.ANCHOR;
     var INCLUDE = rules.INCLUDE;
     var REGEXP = rules.REGEXP;
 
@@ -6787,6 +6800,12 @@ function FindProxyForURL(url, hostname) {
 
     for (i = 0, l = SUFFIX.length; i < l; i++) {
         if (endsWith(hostname, SUFFIX[i])) {
+            return proxy;
+        }
+    }
+
+    for (i = 0, l = ANCHOR.length; i < l; i++) {
+        if (anchorWith(hostname, ANCHOR[i])) {
             return proxy;
         }
     }
