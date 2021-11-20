@@ -1,7 +1,7 @@
 // https://github.com/conwnet/gfwlist-pac
-// update on 2021-10-24T14:44:34.866Z
+// update on 2021-11-20 T14:44:34.866Z
 
-var proxy = 'SOCKS5 127.0.0.1:3128';
+var proxy = 'proxy 127.0.0.1:3128';
 
 var rules = {
     "PREFIX": [
